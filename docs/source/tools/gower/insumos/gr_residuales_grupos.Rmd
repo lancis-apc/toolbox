@@ -1,0 +1,387 @@
+---
+title: "Gráficas verticales de grupos de aptitud"
+author: "Tatiana Merino"
+date: "09/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(lpSolve)
+library(ggplot2)
+library(ggrepel)
+library(ggthemes)
+library(tidyverse)
+library(ggplot2)
+library(kableExtra)
+library(patchwork)
+library(ggpubr)
+```
+
+```{r}
+custom_roll <- function( x , n ){
+  if( n == 0 | n%%length(x)==0) {
+    return(x)
+    }
+   
+  else if (abs(n)>length(x)) {
+  new_n<- (abs(n)%%length(x))*sign(n)
+  return(c( tail(x,new_n) , head(x,-new_n) ))
+  }
+  else {
+  return(c( tail(x,n) , head(x,-n) ))
+  }
+}
+```
+
+
+```{r}
+#RESIDUALES DE LOS GRUPOS
+#datos <- read.csv("./insumos/bd_residuales_grupos_v6_e07_b_6dic21.csv", header = TRUE, sep = ",", row.names=1, check.names = FALSE)
+
+#PROMEDIOS DE APTITUD EN LOS GRUPOS
+datos <- read.csv("./insumos/bd_promedios_grupos_v6_e07_b_6dic21.csv", header = TRUE, sep = ",", row.names=1, check.names = FALSE)
+
+f.obj <- as.vector(t(datos))
+```
+
+## datos
+```{r}
+datos
+```
+
+
+##GRÁFICAS VERTICALES DE datos
+```{r, include=FALSE}
+esc <- "e07_b_pr"
+ver <- "v4"
+act_name_ini <- function(act, x){
+case_when(
+  act == paste0("3_acudul_", x) ~ "Acuacultura dulce",
+  act == paste0("2_acusal_", x) ~ "Acuacultura salobre",
+  act == paste0("3_agr_", x) ~ "Agrícola",
+  act == paste0("4_api_", x) ~ "Apícola",
+  act == paste0("9_mil_", x) ~ "Milpa maya",
+  act == paste0("11_bov_", x) ~ "Pecuario bovino",
+  act == paste0("12_por_", x) ~ "Pecuario porcícola y avícola",
+  act == paste0("7_for_", x) ~ "Forestal",
+  act == paste0("10_min_", x) ~ "Minería",
+  act == paste0("6_ene_", x) ~ "Energía",
+  act == paste0("8_ind_", x) ~ "Industrial",
+  act == paste0("13_pes_", x) ~ "Pesca",
+  act == paste0("14_turnat_", x) ~ "Turismo de naturaleza",
+  act == paste0("15_tursol_", x) ~ "Turismo de sol y playa",
+  act == paste0("16_urb_", x) ~ "Urbano",
+  act == paste0("5_con_", x) ~ "Conservación"
+)
+}
+```
+
+```{r include=TRUE}
+#cambio de nombre
+name_tmp <- act_name_ini(names(datos), esc)
+colnames(datos) <- c(name_tmp)
+
+datos
+```
+
+```{r include=TRUE}
+grupo <- rownames(datos)
+datos$grupo <- grupo
+
+#remover columna núm pix
+df <- datos %>%
+  gather(key = "Variable", value = "valor", -grupo)
+```
+
+
+```{r include=FALSE}
+grafica <- function(df1,x, y){
+  Atributo <- df1$Variable
+  Region <- df1$grupo
+  Valor <- df1$valor
+  puntos = c(rainbow(13))
+  colores <- c(rep("black",x))
+  graf <- ggplot(data=df1, aes(x=grupo, y=Valor)) +
+  geom_segment(aes(xend=Region),yend=0,colour = colores,linetype="solid") +
+  geom_point(size=2,shape=21,colour = puntos,fill = puntos, stroke = 1.2, alpha = 0.4) +
+  geom_text_repel(aes(label = paste0(Atributo, " (", format(round(Valor,2), nsmall=2), ")")), size=3,
+                  #family="Calibri", 
+                  max.overlaps = Inf,
+                  #alpha = 0.8,
+                  show.legend=FALSE,
+                  nudge_x = 0.05, direction = "y", 
+                  hjust = "left", seed = 42
+                  #color = 1:13,
+                  #color = scale_color_gradientn(colours = rainbow(13))
+                  ) +
+                  #colour = palettes[["Tableau 20"]]$value[1:length(datos)])+
+  geom_hline(aes(yintercept=0), linetype="dotted") +
+  #scale_x_discrete(labels=c("0"))+
+  theme(
+    panel.grid.minor=element_blank(), 
+    panel.grid.major=element_blank(),
+    axis.title.x=element_blank(),
+    axis.title.y=element_blank(),
+    axis.text.x=element_blank(),
+    #axis.text.x=element_text(size=11,face="bold", hjust=0.5),
+    axis.line = element_line(colour = "white"),
+    panel.background = element_blank(),
+    axis.text.y=element_blank(),
+    axis.ticks.x = element_blank()
+    #axis.ticks.y = element_blank()
+    )
+
+graf  +
+  theme(strip.text.y=element_text(size=14)) + scale_y_discrete(c(0,0.25, 0.5, 0.75, 1))
+}
+```
+
+#residuales
+```{r include= FALSE, message=FALSE, warning=FALSE}
+#corte de un grupo
+res_r_1 <- datos[1,]
+df_r_1 <- res_r_1%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g1_r.png", width = 950, height = 823)
+grafica(df_r_1)
+# Cerramos el dispositivo
+dev.off()
+
+res_r_2 <- datos[2,]
+df_r_2 <- res_r_2%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g2_r.png", width = 950, height = 823)
+grafica(df_r_2)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_3 <- datos[3,]
+df_r_3 <- res_r_3%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g3_r.png", width = 950, height = 823)
+grafica(df_r_3)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_4 <- datos[4,]
+df_r_4 <- res_r_4%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g4_r.png", width = 950, height = 823)
+grafica(df_r_4)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_5 <- datos[5,]
+df_r_5 <- res_r_5%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g5_r.png", width = 950, height = 823)
+grafica(df_r_5)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_6 <- datos[6,]
+df_r_6 <- res_r_6%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g6_r.png", width = 950, height = 823)
+grafica(df_r_6)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_7 <- datos[7,]
+df_r_7 <- res_r_7%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g7_r.png", width = 950, height = 823)
+grafica(df_r_7)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_8 <- datos[8,]
+df_r_8 <- res_r_8%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g8_r.png", width = 950, height = 823)
+grafica(df_r_8)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_9 <- datos[9,]
+df_r_9 <- res_r_9%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g9_r.png", width = 950, height = 823)
+grafica(df_r_9)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_10 <- datos[10,]
+df_r_10 <- res_r_10%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g10_r.png", width = 950, height = 823)
+grafica(df_r_10)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_11 <- datos[11,]
+df_r_11 <- res_r_11%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g11_r.png", width = 950, height = 823)
+grafica(df_r_11)
+# Cerramos el dispositivo
+dev.off()
+```
+
+#promedios
+```{r include= FALSE, message=FALSE, warning=FALSE}
+#corte de un grupo promedios
+res_r_1 <- datos[1,]
+df_r_1 <- res_r_1%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g1_pr.png", width = 950, height = 823)
+grafica(df_r_1)
+# Cerramos el dispositivo
+dev.off()
+
+res_r_2 <- datos[2,]
+df_r_2 <- res_r_2%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g2_pr.png", width = 950, height = 823)
+grafica(df_r_2)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_3 <- datos[3,]
+df_r_3 <- res_r_3%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g3_pr.png", width = 950, height = 823)
+grafica(df_r_3)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_4 <- datos[4,]
+df_r_4 <- res_r_4%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g4_pr.png", width = 950, height = 823)
+grafica(df_r_4)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_5 <- datos[5,]
+df_r_5 <- res_r_5%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g5_pr.png", width = 950, height = 823)
+grafica(df_r_5)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_6 <- datos[6,]
+df_r_6 <- res_r_6%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g6_pr.png", width = 950, height = 823)
+grafica(df_r_6)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_7 <- datos[7,]
+df_r_7 <- res_r_7%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g7_pr.png", width = 950, height = 823)
+grafica(df_r_7)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_8 <- datos[8,]
+df_r_8 <- res_r_8%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g8_pr.png", width = 950, height = 823)
+grafica(df_r_8)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_9 <- datos[9,]
+df_r_9 <- res_r_9%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g9_pr.png", width = 950, height = 823)
+grafica(df_r_9)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_10 <- datos[10,]
+df_r_10 <- res_r_10%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g10_pr.png", width = 950, height = 823)
+grafica(df_r_10)
+# Cerramos el dispositivo
+dev.off()
+
+#corte de un grupo
+res_r_11 <- datos[11,]
+df_r_11 <- res_r_11%>%
+  gather(key = "Variable", value = "valor", -grupo)
+
+# Dispositivo PNG
+png("gr_g11_pr.png", width = 950, height = 823)
+grafica(df_r_11)
+# Cerramos el dispositivo
+dev.off()
+```

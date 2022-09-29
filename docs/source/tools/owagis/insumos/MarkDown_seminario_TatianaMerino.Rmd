@@ -1,0 +1,46 @@
+---
+title: "Seminario SES"
+author: "Tatiana Merino"
+date: "January 23, 2020"
+output: html_document
+---
+
+```{r Análisis OWA, eval=TRUE}
+OWA<-read.csv(file="OWA.csv", header=T)
+head(OWA)
+OWA<-as.data.frame(OWA)
+
+aptitud<-function(a){
+  U1<-rep(0,length(OWA$u))
+  U2<-rep(0,length(OWA$u))
+  for (i in 1:length(OWA$u)){
+    if (i==1){
+      tmp<-0
+      U1[i]<-(OWA$u[i]+tmp)^(a)
+      U2[i]<-tmp
+    } else {
+      tmp<-U1[i-1]
+      U1[i]<-(OWA$u[i]+tmp)^(a)
+      U2[i]<-tmp
+    }
+  }
+  U3<-U1-U2
+  U4<-U3*OWA$z
+  resultados<-cbind(OWA,U1,U2,U3,U4)
+  valor_owa<-sum(U4)
+  valor_owa
+  esenarios<-cbind(a,valor_owa)
+  colnames(esenarios)<-c("alpha","OWA")
+  return(esenarios)
+}
+
+#evaluación de función
+
+o1<-aptitud(1)
+o2<-aptitud(0.0001)
+o3<-aptitud(1000)
+tabla_resul<-rbind(o1,o2,o3)
+tabla_resul
+
+```
+

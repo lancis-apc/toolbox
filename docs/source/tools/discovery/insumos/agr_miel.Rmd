@@ -1,0 +1,86 @@
+```{r warning=FALSE, include=FALSE}
+caso <- 40
+source("config_ini.R", local = knitr::knit_global(), encoding = "UTF-8")
+# primer cuartil-2, mediana-3, promedio-4, tercer cuartil-5
+corte_umbral <- 5
+variables <- c(forzante, estado, vars_repercusion[[caso]])
+source("config_ini_part2.R", local = knitr::knit_global(), encoding = "UTF-8")
+```
+
+## Análisis del efecto directo del crecimiento de `r diccionario$desc[diccionario$variable == forzante]` sobre `r paste0(diccionario$desc[diccionario$variable == estado])` 
+
+**Relación causal:** AGR → MIEL
+
+**Explicación causal:** AGR → AGRQ → MIEL
+
+
+### Dinámica promedio en el tiempo
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+graficar_media(datat, xtime=max(time_values), titulo = "Media")
+```
+
+### Detección de escenarios
+
+```{r eval=FALSE, include=FALSE}
+#### **Variable forzante:** `r paste0("Crecimiento ", diccionario$desc[diccionario$variable == forzante])`
+
+#### **Variable de estado:** `r paste0(diccionario$desc[diccionario$variable == estado])`
+
+#### **Repercusión:** `r paste0(diccionario$desc[diccionario$variable == repercusion])`
+```
+
+
+```{r echo=FALSE}
+table1 %>%
+  kbl(caption = "Tabla. Umbrales seleccionados.") %>%
+  kable_classic(full_width = F)
+```
+#### Árbol de clasificación
+```{r echo=FALSE}
+rpart.plot(mod1, extra= 1, cex= 0.6)
+```
+
+
+```{r include=FALSE}
+elementos <- mod1[["frame"]][["n"]]
+elem_seleccionados <- c(11+72)
+reglas <- c('0.16<=AGR<0.22, MIEL<0.16')
+total_cortes <- length(elem_seleccionados)
+cortes <- list()
+pmod1 <- as.party(mod1)
+for (i in 1:total_cortes) {
+  cortes[[i]] <- data_party(pmod1, which(elementos == elem_seleccionados[i]))
+}
+num_corte <- 1
+```
+
+#### Subconjunto de datos que cumplen con las reglas de detección de escenarios
+
+
+##### Caso 1. `r reglas[num_corte]`
+```{r echo=FALSE}
+cut <- cortes[[num_corte]]
+vars_parallel <- c(forzante, vars_repercusion[[caso]], estado)
+graficar_parallel(cut, data, vars_parallel)
+num_corte <- num_corte + 1
+```
+
+##### Comparación
+```{r echo=FALSE}
+selected_cut <- 1
+graficar_cajas(cortes, data, c(forzante, estado), reglas)
+```
+
+### Subconjunto seleccionado: `r reglas[selected_cut]`
+```{r warning=FALSE, include=FALSE}
+source("preparar_tabla.R", local = knitr::knit_global(), encoding = "UTF-8")
+```
+
+
+```{r echo=FALSE, code=xfun::read_utf8('desplegar_tabla.R')}
+
+```
+
+
+

@@ -10,11 +10,15 @@ Welcome to Toolbox's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   owagis
+   ahp
+   funciones
+   
 
 
-Indices and tables
-==================
+.. Indices and tables
+.. ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`

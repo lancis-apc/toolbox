@@ -1,0 +1,155 @@
+---
+title: 'Mesas pesca: factores económicos y gubernamentales'
+author: "Ileana Grave"
+date: "17/07/2020"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(matrixStats)
+library(pracma)
+library(dplyr)
+library(purrr)
+library(plotly)
+```
+
+Función para calcular los elementos de la matriz triangular inferior
+
+```{r}
+lower.triangular <- function(x){
+  # si existen matrices con elementos 0, no calcula la inversa y llena la triangular inferior con ceros
+  b <- any(x == 0)
+  if (isTRUE(b) == TRUE){
+  x[lower.tri(x)] <- x[upper.tri(x)] 
+  }
+  else{
+  # x a matrix with elements in the triangular superior, ones in the diagonal
+  # se obtiene la matriz transpuesta de la matriz anterior (esto es necesario para conservar que los elementos de la matriz triangular inferior son los inversos de los elementos de la triangular inferior)
+  mat_mesa1_t <- t(x)
+  # se calcula el elemento de la diagonal inferior
+  x[lower.tri(x)] <- 1/mat_mesa1_t[lower.tri(mat_mesa1_t)]
+  }
+  return(x)  
+}
+```
+
+Se especifican los parámetros a utilizar: número de usuarios y magnitud de la perturbación
+```{r}
+users_total <- 4
+pert <- 1
+```
+
+
+## Lectura de los datos para cada nivel
+
+### Nivel 2
+```{r}
+# se enlistan todos los archivos CSV contenidos en la carpeta
+temp <- list.files(path = "./insumos/pesca/n2_4",
+               pattern = "*.csv", 
+               full.names = T) 
+# se leen todos los archivos a una lista, cada elemento de la lista será un data_frame
+myfiles_n2 <-  lapply(temp, read.csv, header = TRUE, row.names = 1, fileEncoding = "utf-8")
+```
+
+Se convierten a matriz
+```{r}
+# los data_frames se transforman a matriz
+matrices_n2 <- lapply(myfiles_n2, as.matrix)
+# Se calculan los elementos de la triangular inferior
+matrices_n2 <- lapply(matrices_n2, lower.triangular)
+```
+
+
+### Nivel 3
+<!-- Se leen todos los archivos asociados al nivel 3 -->
+<!-- ```{r} -->
+<!-- # se enlistan todos los archivos CSV contenidos en la carpeta -->
+<!-- temp <- list.files(path = "./insumos/conocimientos_info/n3", -->
+<!--                pattern = "*.csv",  -->
+<!--                full.names = T)  -->
+<!-- # se leen todos los archivos a una lista, cada elemento de la lista será un data_frame -->
+<!-- myfiles_n3 <-  lapply(temp, read.csv, header = TRUE, row.names = 1, fileEncoding = "utf-8") -->
+<!-- ``` -->
+
+<!-- Se convierten a matriz -->
+<!-- ```{r} -->
+<!-- # los data_frames se transforman a matriz -->
+<!-- matrices_n3 <- lapply(myfiles_n3, as.matrix) -->
+<!-- # Se calculan los elementos de la triangular inferior -->
+<!-- matrices_n3 <- lapply(matrices_n3, lower.triangular) -->
+<!-- ``` -->
+
+## Cálculo de la sensibilidad para cada nivel
+
+### Nivel 2
+```{r}
+out_list_n2 <- list()
+cont <- 0
+for (i in c(1:(length(matrices_n2)/users_total))){
+    out_list_n2[[i]] <- ahpsensitivity::group_sens(matrices_n2[(1+cont):(users_total+cont)], pert)
+    cont <- cont + users_total
+    names(out_list_n2)[i] <- paste0("subcriterio_", i)
+}
+
+# modificar el código para poner el nombre particular del subcriterio 
+```
+
+
+<!-- ### Nivel 3 -->
+<!-- ```{r} -->
+<!-- out_list_n3 <- list() -->
+<!-- cont<- 0 -->
+<!-- for (i in c(1:(length(matrices_n3)/users_total))){ -->
+<!--     out_list_n3[[i]] <- ahpsensitivity::group_sens(matrices_n3[(1+cont):(users_total+cont)], pert) -->
+<!--     cont <- cont + users_total -->
+<!--     names(out_list_n3)[i] <- paste0("subcriterio_", i) -->
+<!-- } -->
+
+<!-- # modificar el código para poner el nombre particular del subcriterio  -->
+<!-- ``` -->
+
+## Identificación de la mesa que tiene mayor influencia en las comparaciones, por nivel
+
+Se obtiene el valor máximo para cada elemento
+```{r}
+max_list_n2 <- list()
+for (i in 1:length(out_list_n2)){
+  max_list_n2[[i]] <- lapply(out_list_n2[[i]][[18]], max)
+  names(max_list_n2)[i] <- paste0("subcriterio_", i)
+}
+# El criterio más sensible: quién es?
+max(unlist(max_list_n2))
+```
+
+¿Cuál es el usuario que tiene el valor más grande de sensibilidad y a qué subcriterio corresponde?
+```{r}
+which(unlist(max_list_n2) == max(unlist(max_list_n2)))
+```
+```{r}
+sort(unlist(max_list_n2))
+```
+
+```{r}
+## Generar tablas
+
+#dt <- data.frame(data_prob$cat_row, data_prob$cat_col, round(data_prob$p, digits =4), round(data_prob$one_minus_p, digits =4))
+
+#names(dt)[1] <- "cat_row"
+#names(dt)[2] <- "cat_row"
+#names(dt)[3] <- "p_ij"
+#names(dt)[4] <- "1-p_ij"
+
+
+#dt %>%
+#  kable() %>%
+#  kable_styling(fixed_thead = T, full_width = F)
+```
+
+

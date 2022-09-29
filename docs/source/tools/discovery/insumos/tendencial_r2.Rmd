@@ -1,0 +1,203 @@
+---
+title: "Región II Noroeste: Tendencial"
+#date: "25/11/2021"
+output: 
+  html_document: 
+    toc: yes
+    toc_float: yes
+    toc_depth: 6
+    mathjax: null
+    css: doc.css
+    mode: selfcontained
+params:
+  p_esc: tendencial
+  p_region: r2
+  p_version: v3
+  p_time: !r c('0', '5', '10', '15', '20', '25')
+---
+
+```{r warning=FALSE, include=FALSE}
+source("functions_code.R", local = knitr::knit_global(), encoding = "UTF-8")
+```
+
+```{r eval=FALSE, child=c('agr_cfor.Rmd'), include=FALSE}
+```
+
+```{r eval=FALSE, child=c('bmat_cfor.Rmd'), include=FALSE}
+```
+
+\newpage
+```{r echo=FALSE, child=c('bmat_vacui.Rmd')}
+```
+
+```{r eval=FALSE, child=c('canh2o_humc.Rmd'), include=FALSE}
+```
+
+```{r eval=FALSE, child=c('canh2o_humt.Rmd'), include=FALSE}
+```
+
+```{r eval=FALSE, child=c('cfor_habt.Rmd'), include=FALSE}
+```
+
+```{r eval=FALSE, child=c('cfor_humt.Rmd'), include=FALSE}
+```
+
+```{r eval=FALSE, child=c('cfor_vacui.Rmd'), include=FALSE}
+```
+
+```{r eval=FALSE, child=c('duna_habt_pesca.Rmd'), include=FALSE}
+```
+
+\newpage
+```{r echo=FALSE, child=c('gani_air.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('gani_cfor.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('gani_conh2o_humc.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('gani_humt.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('ganx_cfor_pfor.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('avic_air.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('avic_cfor.Rmd')}
+```
+
+```{r eval=FALSE, child=c('mmaya_cfor.Rmd'), include=FALSE}
+```
+
+\newpage
+```{r echo=FALSE, child=c('pmed_air.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('pmed_cfor.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('pmega_air.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('pmega_cfor.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('pmini_air.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('esol_cfor.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('eeol_murav.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('eter_cfor.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('eter_vacui.Rmd')}
+```
+
+```{r eval=FALSE, child=c('resp_air.Rmd'), include=FALSE}
+```
+
+\newpage
+```{r echo=FALSE, child=c('resp_vacui.Rmd')}
+```
+
+
+```{r eval=FALSE, child=c('resl_vacui.Rmd'), include=FALSE}
+```
+
+```{r eval=FALSE, child=c('ress_vacui.Rmd'), include=FALSE}
+```
+
+```{r eval=FALSE, child=c('tunt_humc.Rmd'), include=FALSE}
+```
+
+\newpage
+```{r echo=FALSE, child=c('ind_tunt_humt.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('tunt_mmaya.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('tunt_vacui.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('tusp_acua.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('tusp_duna.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('tusp_humc.Rmd')}
+```
+
+```{r eval=FALSE, child=c('tusp_humt.Rmd'), include=FALSE}
+```
+
+\newpage
+```{r echo=FALSE, child=c('ind_tusp_pesca.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('tusp_vacui.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('urb_cfor.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('ind_urb_habt.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('urb_humc.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('urb_humt.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('urb_mmaya.Rmd')}
+```
+
+\newpage
+```{r echo=FALSE, child=c('urb_vacui.Rmd')}
+```
+
+```{r echo=FALSE}
+df <- ldply (banco_salida, data.frame)
+df <- df %>% relocate(c(title_repercusion, efecto_repercusion, repercusion_tendencia), .before = desc)
+df <- df %>% relocate(c(forzante, estado, repercusion), .before = title_region)
+ruta_out <- paste0("./salidas/", escenario, "_", region, ".csv")
+write.csv(df, ruta_out, row.names = FALSE, fileEncoding = "UTF-8")
+```
+
+
+

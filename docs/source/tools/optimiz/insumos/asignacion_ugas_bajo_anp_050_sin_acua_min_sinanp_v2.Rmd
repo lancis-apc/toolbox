@@ -1,0 +1,153 @@
+---
+title: "Optimización residuales"
+author: "Ileana Grave"
+date: "11/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(lpSolve)
+library(ggplot2)
+library(ggrepel)
+library(ggthemes)
+library(tidyverse)
+```
+
+```{r}
+custom_roll <- function( x , n ){
+  if( n == 0 | n%%length(x)==0) {
+    return(x)
+    }
+   
+  else if (abs(n)>length(x)) {
+  new_n<- (abs(n)%%length(x))*sign(n)
+  return(c( tail(x,new_n) , head(x,-new_n) ))
+  }
+  else {
+  return(c( tail(x,n) , head(x,-n) ))
+  }
+}
+```
+
+
+```{r}
+residuales <- read.csv("./insumos/bd_residuales_poety_uga_11mar22_10marzo2022_v4_050_sin_acu_sin_anp_26abril.csv", header = TRUE, sep = ",", row.names=1, check.names = FALSE)
+conflictos <- read.csv("./insumos/matriz_conflictos_yuc_bajo_sin_acua.csv", header = TRUE, sep = ",", row.names=1, check.names = FALSE)
+f.obj <- as.vector(t(residuales))
+```
+
+## Grupos
+```{r}
+residuales
+```
+
+## Conflictos a eliminar
+```{r}
+conflictos
+```
+
+## ****************************** Restricciones ****************************** 
+
+### Restricción 1: suma de filas
+```{r}
+n1 <- nrow(residuales)
+n2 <- ncol(residuales)
+tmp1 <- c(rep(1, n2), rep(0, n2*(n1-1)))
+tmp2 <- seq(0, n1*n2, by = n2)
+rest_1 <- list()
+for(i in 1:n1){
+  rest_1[[i]] <- matrix(custom_roll(tmp1, tmp2[i]), byrow=TRUE, n1, n2)
+}
+restriccion1 <- do.call(cbind, rest_1)
+```
+
+### Restricción 2: suma de las columnas
+```{r}
+tmp1 <- rep(1, n1)
+tmp2 <- lapply(tmp1, diag, nrow = n2, ncol = n2)
+restriccion2 <- do.call(cbind, tmp2)
+```
+
+### Restricción 3: restringir grupos, a partir de la matriz de conflictos
+```{r}
+# conflictos a vector
+vec_conf <- as.vector(t(conflictos))
+matriz_conf <- data.matrix(conflictos)
+tmp3 <- list()
+cont <- 1
+# generar lista con todos los conflictos
+for(i in 1:nrow(matriz_conf)){
+  for (j in 1:ncol(matriz_conf)){
+    vec_tmp <- rep(0, n1*n2)
+    if (matriz_conf[i,j] == 1){
+      vec_tmp[i] <- 1
+      vec_tmp[j] <- 1
+    }
+    tmp3[[cont]] <- vec_tmp
+    cont <- cont+1
+  }
+}
+```
+
+```{r}
+tmp2 <- seq(0, n1*n2, by = n2)
+# se quedan sólo los conflictos: 34
+tmp3 <- subset(tmp3, lapply(tmp3, sum) == 2)
+cont <- 1
+rest_3 <- list()
+for (i in 1:length(tmp3)) {
+  for (j in 1:n1){
+    rest_3[[cont]] <- custom_roll(tmp3[[i]], tmp2[j])
+    cont <- cont+1
+  }
+}
+restriccion3 <- do.call(rbind, rest_3)
+num_rest3 <- nrow(restriccion3)
+num_rest3
+```
+
+
+### Unir las restricciones
+```{r}
+# restriccion1 filas, restriccion2 columnas, restriccion3 conflictos
+f.con <- rbind(restriccion1, restriccion2, restriccion3)
+#f.con <- rbind(restriccion1, restriccion2)
+nrow(f.con)
+```
+
+## *********************  Restricciones: desigualdades, rhs ****************************** 
+```{r}
+# restriccion1 filas, restriccion2 columnas, restriccion3 conflictos
+f.dir <- c(rep("<=",nrow(restriccion1)), rep(">=",nrow(restriccion2)), rep("<=",nrow(restriccion3)))
+length(f.dir)
+```
+
+```{r}
+# restriccion1 filas, restriccion2 columnas, restriccion3 conflictos
+f.rhs <- c(rep(5,nrow(restriccion1)),rep(1,nrow(restriccion2)),rep(1,nrow(restriccion3)))
+length(f.rhs)
+```
+
+
+```{r}
+lp ("max", f.obj, f.con, f.dir, f.rhs, all.bin=TRUE)
+```
+
+```{r, include=FALSE}
+outt <- lp ("max", f.obj, f.con, f.dir, f.rhs, all.bin=TRUE)$solution
+matriz_asignacion <- t(matrix(outt, n2,n1))
+colnames(matriz_asignacion) <- colnames(conflictos)
+rownames(matriz_asignacion) <- rownames(residuales)
+#matriz_asignacion
+```
+
+```{r}
+ruta_out <- paste0("./salidas/", "uga_11feb22_10marzo2022_v4_050_sin_acu_sin_anp_26abr.csv")
+write.csv(matriz_asignacion, ruta_out, row.names = TRUE, fileEncoding = "UTF-8")
+```
+
+

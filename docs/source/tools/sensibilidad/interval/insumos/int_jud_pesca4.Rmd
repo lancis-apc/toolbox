@@ -1,0 +1,468 @@
+---
+title: "Análisis de sensibilidad"
+author: "Ileana Grave y Tatiana Merino"
+date: "09/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(matrixStats)
+library(pracma)
+library(dplyr)
+library(purrr)
+library(plotly)
+library(ggplot2)
+library(kableExtra)
+library(devtools)
+library(ggpubr)
+library(viridis)
+```
+
+
+## Lectura de los datos para cada nivel
+
+### Random index file
+```{r}
+ri_table <- read.csv("C:/Dropbox (LANCIS)/PAPIIT/pap_socio_institucional/mcda/analisis_sensibilidad/interval_judgment/insumos/random_index.csv", header = TRUE, sep = ",")
+```
+
+### Nivel 2 Upper
+```{r}
+# se enlistan todos los archivos CSV contenidos en la carpeta
+temp <- list.files(path = "C:/Dropbox (LANCIS)/PAPIIT/pap_socio_institucional/mcda/analisis_sensibilidad/interval_judgment/insumos/pesca/n2/upper_4",
+               pattern = "*.csv", 
+               full.names = T) 
+# se leen todos los archivos a una lista, cada elemento de la lista será un data_frame
+n2_upper <-  lapply(temp, read.csv, header = TRUE, row.names = 1, fileEncoding = "utf-8")
+```
+
+### Nivel 2 Lower
+```{r}
+# se enlistan todos los archivos CSV contenidos en la carpeta
+temp <- list.files(path = "C:/Dropbox (LANCIS)/PAPIIT/pap_socio_institucional/mcda/analisis_sensibilidad/interval_judgment/insumos/pesca/n2/lower_4",
+               pattern = "*.csv", 
+               full.names = T) 
+# se leen todos los archivos a una lista, cada elemento de la lista será un data_frame
+n2_lower <-  lapply(temp, read.csv, header = TRUE, row.names = 1, fileEncoding = "utf-8")
+```
+
+## Número de matrices aleatorias a generar
+Se especifican los parámetros a utilizar:
+```{r}
+nmatrices <- 50000
+```
+
+## Nivel 2
+```{r}
+n2 <-  ahpsensitivity::ahp.interval(n2_lower, n2_upper, nmatrices, norm_test = TRUE)
+```
+
+## Estadística descriptiva
+
+# Factores económicos datos est.
+```{r}
+est_eco<-summary(n2$matrix_1$w_consistent)
+
+colnames(est_eco)<- c("Precio","Falta de Empleo","Nuevos mercados","Consistencia")
+est_eco
+
+```
+
+# Factores gubernamentales datos est.
+```{r}
+est_gub<-summary(n2$matrix_2$w_consistent)
+colnames(est_gub)<- c("Gobernanza participativa","Marco Institucional","Políticas públicas","Consistencia")
+est_gub
+```
+
+# Factores sociales datos est.
+```{r}
+est_soc<-summary(n2$matrix_3$w_consistent)
+colnames(est_soc)<- c("Acceso a procesos","Acceso a zonas","Seguridad","Consistencia")
+est_soc
+```
+# Pesos consistentes redondeados y medianas de cada matriz
+```{r}
+#obtención de medianas de cada criterio de cada matriz
+#factores eco
+m1_1<-round(median(n2$matrix_1$w_consistent[[1]]), digits=3)
+m1_2<-round(median(n2$matrix_1$w_consistent[[2]]),digits=3)
+m1_3<-round(median(n2$matrix_1$w_consistent[[3]]),digits=3)
+#factores gub
+m2_1<-round(median(n2$matrix_2$w_consistent[[1]]),digits=3)
+m2_2<-round(median(n2$matrix_2$w_consistent[[2]]),digits=3)
+m2_3<-round(median(n2$matrix_2$w_consistent[[3]]),digits=3)
+#factores soc
+m3_1<-round(median(n2$matrix_3$w_consistent[[1]]),digits=3)
+m3_2<-round(median(n2$matrix_3$w_consistent[[2]]),digits=3)
+m3_3<-round(median(n2$matrix_3$w_consistent[[3]]),digits=3)
+
+#f_economicos
+w_cons_1<-cbind(round(n2$matrix_1$w_consistent[[1]],digits = 3),
+                round(n2$matrix_1$w_consistent[[2]],digits=3),
+                round(n2$matrix_1$w_consistent[[3]],digits = 3))
+w_cons_1<-as.data.frame(w_cons_1)
+
+#f_gubernamentales
+w_cons_2<-cbind(round(n2$matrix_2$w_consistent[[1]],digits=3),
+                round(n2$matrix_2$w_consistent[[2]],digits = 3),
+                round(n2$matrix_2$w_consistent[[3]],digits=3))
+w_cons_2<-as.data.frame(w_cons_2)
+
+# f_sociales
+w_cons_3<-cbind(round(n2$matrix_3$w_consistent[[1]],digits = 3),
+                round(n2$matrix_3$w_consistent[[2]],digits=3),
+                round(n2$matrix_3$w_consistent[[3]],digits=3))
+w_cons_3<-as.data.frame(w_cons_3)
+
+```
+
+# Pesos consistentes para graficar 
+```{r}
+#data frame a lo largo factores económicos matriz 1
+w_V1<-n2$matrix_1$w_consistent[[1]]
+c_V1<-rep("Precio",length(n2$matrix_1$w_consistent[[1]]))
+v_V1<-cbind(w_V1,c_V1)
+w_V2<-n2$matrix_1$w_consistent[[2]]
+c_V2<-rep("Falta de Empleo",length(n2$matrix_1$w_consistent[[2]]))
+v_V2<-cbind(w_V2,c_V2)
+w_V3<-n2$matrix_1$w_consistent[[3]]
+c_V3<-rep("Nuevos Mercados",length(n2$matrix_1$w_consistent[[3]]))
+v_V3<-cbind(w_V3,c_V3)
+
+dt_gral1<-rbind(v_V1,v_V2,v_V3)
+colnames(dt_gral1)<-c("Peso","Criterio")
+dt_gral1<-as.data.frame(dt_gral1)
+dt_gral1$Peso<-as.numeric(dt_gral1$Peso)
+dt_gral1$Peso<-round(dt_gral1$Peso,digits=3)
+
+#data frame a lo largo factores gubernamentales matriz 2
+w_V1<-n2$matrix_2$w_consistent[[1]]
+c_V1<-rep("Gobernanza Participativa",length(n2$matrix_2$w_consistent[[1]]))
+v_V1<-cbind(w_V1,c_V1)
+w_V2<-n2$matrix_2$w_consistent[[2]]
+c_V2<-rep("Marco Institucional",length(n2$matrix_2$w_consistent[[2]]))
+v_V2<-cbind(w_V2,c_V2)
+w_V3<-n2$matrix_2$w_consistent[[3]]
+c_V3<-rep("Políticas Públicas",length(n2$matrix_2$w_consistent[[3]]))
+v_V3<-cbind(w_V3,c_V3)
+
+dt_gral2<-rbind(v_V1,v_V2,v_V3)
+colnames(dt_gral2)<-c("Peso","Criterio")
+dt_gral2<-as.data.frame(dt_gral2)
+dt_gral2$Peso<-as.numeric(dt_gral2$Peso)
+dt_gral2$Peso<-round(dt_gral2$Peso,digits=3)
+
+#data frame a lo largo factores sociales matriz 3
+w_V1<-n2$matrix_3$w_consistent[[1]]
+c_V1<-rep("Acceso a Procesos",length(n2$matrix_3$w_consistent[[1]]))
+v_V1<-cbind(w_V1,c_V1)
+w_V2<-n2$matrix_3$w_consistent[[2]]
+c_V2<-rep("Acceso a Zonas",length(n2$matrix_3$w_consistent[[2]]))
+v_V2<-cbind(w_V2,c_V2)
+w_V3<-n2$matrix_3$w_consistent[[3]]
+c_V3<-rep("Seguridad",length(n2$matrix_3$w_consistent[[3]]))
+v_V3<-cbind(w_V3,c_V3)
+
+dt_gral3<-rbind(v_V1,v_V2,v_V3)
+colnames(dt_gral3)<-c("Peso","Criterio")
+dt_gral3<-as.data.frame(dt_gral3)
+dt_gral3$Peso<-as.numeric(dt_gral3$Peso)
+dt_gral3$Peso<-round(dt_gral3$Peso,digits=3)
+##Modificar código para poner los nombres de los criterios evaluados
+
+```
+
+# Graficación de datos estadísticos factores económicos
+```{r}
+ggplot(data= dt_gral1,
+       mapping= aes(x= Peso,
+                    fill= Criterio, color= Criterio)) +
+  geom_boxplot(alpha= 0.3,
+               outlier.colour= "black",
+               outlier.fill= "black",
+               outlier.size= 3) +
+  labs(title= "Comparación de criterios con respecto a Factores Económicos",
+       plot.title=element_text(size=15),
+       x= "Peso", 
+       y= "Criterio") +
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.line.y=element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line.x = element_line(colour = "black"),
+        panel.background = element_blank(),
+        panel.grid = element_line(color= "grey",linetype = 4))
+
+```
+
+# Graficación de frecuencias factores económicos
+```{r}
+ggplot(data= dt_gral1,
+       mapping= aes(x= Peso,
+                    fill= Criterio, color= Criterio)) +
+  geom_histogram(bins=30,
+                 position='identity',
+                 alpha=0.3) +
+  labs(#title = 'Histograma de pesos:Factores Económicos',
+       #plot.title=element_text(size=15),
+       fill= 'Criterio',
+       x='Peso',
+       y='Frecuencia') +
+  geom_vline(data=w_cons_1,
+             aes(xintercept=median(n2$matrix_1$w_consistent[[1]])), 
+             color= rgb(0,0,1,0.8), linetype= 2, size= 1) +
+  geom_vline(data=w_cons_1,
+             aes(xintercept=median(n2$matrix_1$w_consistent[[2]])), 
+             color= rgb(1,0,0,0.8), linetype= 2, size= 1) +
+  geom_vline(data= w_cons_1,
+             aes(xintercept= median(n2$matrix_1$w_consistent[[3]])), 
+             color= "green3", linetype= 2, size= 1)+
+  scale_y_continuous(limit = c(0,15000))+
+  theme_bw() +
+    theme(
+    axis.line.x = element_line(linetype="solid", colour="black"),
+    axis.line.y = element_line(linetype="solid", colour="black"),
+    axis.text.x=element_text(colour="black",size=rel(1.3)),
+    axis.text.y=element_text(colour="black",size=rel(1.3)),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.border=element_blank(),
+    legend.position="none"
+  )
+
+```
+
+```{r}
+## Generar tablas
+data_prob <- n2[["matrix_1"]][["data_prob"]]
+p_ij <- n2[["matrix_1"]][["p_ij"]]
+ones_minus_p_ij <- n2[["matrix_1"]][["ones_minus_pij"]]
+
+dt_eco <- cbind(data_prob$cat_row, data_prob$cat_col, p_ij, ones_minus_p_ij)
+
+dt_eco %>%
+  kable() %>%
+  kable_styling(fixed_thead = T, full_width = F)
+```
+
+# Graficación de datos estadísticos factores gubernamentales
+```{r}
+ggplot(data= dt_gral2,
+       mapping= aes(x= Peso,
+                    fill= Criterio, color= Criterio)) +
+  scale_color_viridis(discrete = TRUE, option = "C")+
+  scale_fill_viridis(discrete = TRUE, option= "C") +
+  geom_boxplot(alpha= 0.3,
+               outlier.colour= "black",
+               outlier.fill= "black",
+               outlier.size= 3) +
+  labs(title= "Comparación de criterios con respecto a Factores Gubernamentales",
+       plot.title=element_text(size=15),
+       x= "Peso", 
+       y= "Criterio") +
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.line.y=element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line.x = element_line(colour = "black"),
+        panel.background = element_blank(),
+        panel.grid = element_line(color= "grey",linetype = 4))
+```
+
+# Graficación de frecuencias factores gubernamentales
+```{r}
+ggplot(data= dt_gral2,
+       mapping= aes(x= Peso,
+                    fill= Criterio, color= Criterio)) +
+  scale_color_viridis(discrete = TRUE, option = "C")+
+  scale_fill_viridis(discrete = TRUE, option= "C") +
+  geom_histogram(bins=30,
+                 position='identity',
+                 alpha=0.3) +
+  labs(#title = 'Histograma de pesos: Factores Gubernamentales',
+       #plot.title=element_text(size=15),
+       fill= 'Criterio',
+       x='Peso',
+       y='Frecuencia') +
+  geom_vline(data=w_cons_1,
+             aes(xintercept=median(n2$matrix_2$w_consistent[[1]])), 
+             color= "purple", linetype= 2, size= 1) +
+  geom_vline(data=w_cons_1,
+             aes(xintercept=median(n2$matrix_2$w_consistent[[2]])), 
+             color= "violetred3", linetype= 2, size= 1) +
+  geom_vline(data= w_cons_1,
+             aes(xintercept= median(n2$matrix_2$w_consistent[[3]])), 
+             color= "orange", linetype= 2, size= 1)+
+  scale_y_continuous(limit = c(0,15000))+
+  theme_bw() +
+    theme(
+    axis.line.x = element_line(linetype="solid", colour="black"),
+    axis.line.y = element_line(linetype="solid", colour="black"),
+    axis.text.x=element_text(colour="black",size=rel(1.3)),
+    axis.text.y=element_text(colour="black",size=rel(1.3)),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.border=element_blank(),
+    legend.position="none"
+  )
+
+```
+
+```{r}
+## Generar tablas
+data_prob <- n2[["matrix_2"]][["data_prob"]]
+p_ij <- n2[["matrix_2"]][["p_ij"]]
+ones_minus_p_ij <- n2[["matrix_2"]][["ones_minus_pij"]]
+
+dt_gub <- cbind(data_prob$cat_row, data_prob$cat_col, p_ij, ones_minus_p_ij)
+
+dt_gub %>%
+  kable() %>%
+  kable_styling(fixed_thead = T, full_width = F)
+```
+
+# Graficación de datos estadísticos factores sociales
+```{r}
+ggplot(data= dt_gral3,
+       mapping= aes(x= Peso,
+                    fill= Criterio, color= Criterio)) +
+  scale_color_viridis(discrete = TRUE, option = "C")+
+  scale_fill_viridis(discrete = TRUE, option= "C") +
+  geom_boxplot(alpha= 0.3,
+               outlier.colour= "black",
+               outlier.fill= "black",
+               outlier.size= 3) +
+  labs(title= "Comparación de criterios con respecto a Factores Sociales",
+       plot.title=element_text(size=15),
+       x= "Peso", 
+       y= "Criterio") +
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.line.y=element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line.x = element_line(colour = "black"),
+        panel.background = element_blank(),
+        panel.grid = element_line(color= "grey",linetype = 4))
+
+```
+
+# Graficación de frecuencias factores sociales
+```{r}
+ggplot(data= dt_gral3,
+       mapping= aes(x= Peso,
+                    fill= Criterio, color= Criterio)) +
+  scale_color_viridis(discrete = TRUE, option = "C")+
+  scale_fill_viridis(discrete = TRUE, option= "C") +
+  geom_histogram(bins=30,
+                 position='identity',
+                 alpha=0.3) +
+  labs(#title = 'Histograma de pesos: Factores Sociales',
+       #plot.title=element_text(size=15),
+       fill= 'Criterio',
+       x='Peso',
+       y='Frecuencia') +
+  geom_vline(data=w_cons_1,
+             aes(xintercept=median(n2$matrix_3$w_consistent[[1]])), 
+             color= "purple", linetype= 2, size= 1) +
+  geom_vline(data=w_cons_1,
+             aes(xintercept=median(n2$matrix_3$w_consistent[[2]])), 
+             color= "violetred3", linetype= 2, size= 1) +
+  geom_vline(data= w_cons_1,
+             aes(xintercept= median(n2$matrix_3$w_consistent[[3]])), 
+             color= "orange", linetype= 2, size= 1)+
+  scale_y_continuous(limit = c(0,15000))+
+  theme_bw() +
+    theme(
+    axis.line.x = element_line(linetype="solid", colour="black"),
+    axis.line.y = element_line(linetype="solid", colour="black"),
+    axis.text.x=element_text(colour="black",size=rel(1.3)),
+    axis.text.y=element_text(colour="black",size=rel(1.3)),
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.border=element_blank(),
+    legend.position="none"
+  )
+```
+
+```{r}
+## Generar tablas
+data_prob <- n2[["matrix_3"]][["data_prob"]]
+p_ij <- n2[["matrix_3"]][["p_ij"]]
+ones_minus_p_ij <- n2[["matrix_3"]][["ones_minus_pij"]]
+
+dt_soc <- cbind(data_prob$cat_row, data_prob$cat_col, p_ij, ones_minus_p_ij)
+
+dt_soc %>%
+  kable() %>%
+  kable_styling(fixed_thead = T, full_width = F)
+```
+
+#Tabla de porcentajes
+```{r}
+#Cuáles criterios se sobrelapan, número de pesos y %?
+p_eco<-dt_eco[,3]*100
+p_gub<-dt_gub[,3]*100
+p_soc<-dt_soc[,3]*100
+criterio<-c("12","13","23")
+tabla_p<-cbind(criterio,p_eco,p_gub,p_soc)
+colnames(tabla_p)<- c("criterios","%_eco","%_gub","%_soc")
+tabla_p<-as.data.frame(tabla_p)
+tabla_p
+```
+
+#Cálculo de los pesos finales con las medianas f_eco
+```{r}
+
+#cálculo del peso compartido
+#f_eco: 12 tiene mayor % 
+#w1_eco<-(1-(median(n2$matrix_1$w_consistent[[3]])))/2
+#w2_eco<-w1_eco
+#w3_eco<-median(n2$matrix_1$w_consistent[[3]])
+#w_eco<- c(w1_eco,w2_eco,w3_eco)
+
+w1_eco<-median(n2$matrix_1$w_consistent[[1]])
+w2_eco<-median(n2$matrix_1$w_consistent[[2]])
+w3_eco<-median(n2$matrix_1$w_consistent[[3]])
+w_eco<-c(round(w1_eco, digits=2),round(w2_eco,digits=2), round(w3_eco, digits=2))
+cr_eco<-c("Precio","Falta de Empleo","Nuevos Mercados")
+final_eco<-as.data.frame(cbind(cr_eco,w_eco))
+colnames(final_eco)<-c("Criterio", "Peso")
+final_eco
+
+```
+
+#cálculo de pesos finales f_gub
+```{r}
+#f_gub: 12 se mantiene como el de mayor %
+w1_gub<-(median(n2$matrix_2$w_consistent[[1]])+ median(n2$matrix_2$w_consistent[[2]]))/2
+w2_gub<-w1_gub
+w3_gub<-median(n2$matrix_2$w_consistent[[3]])
+w_gub<-c(round(w1_gub, digits=2),round(w2_gub,digits=2), round(w3_gub, digits=2))
+cr_gub<-c("Gobernanza Participativa","Marco Institucional","Políticas Públicas")
+final_gub<-as.data.frame(cbind(cr_gub,w_gub))
+colnames(final_gub)<-c("Criterio", "Peso")
+final_gub
+
+```
+
+#cálculo de pesos finales f_soc
+```{r}
+#f_soc: 12 se mantiene como el de mayor % 
+w1_soc<-(median(n2$matrix_3$w_consistent[[1]])+ median(n2$matrix_3$w_consistent[[2]]))/2
+w2_soc<-w1_soc
+w3_soc<-median(n2$matrix_3$w_consistent[[3]])
+w_soc<-c(round(w1_soc, digits=2),round(w2_soc,digits=2), round(w3_soc, digits=2))
+cr_soc<-c("Acceso a Procesos","Acceso a Zonas","Seguridad")
+final_soc<-as.data.frame(cbind(cr_soc,w_soc))
+colnames(final_soc)<-c("Criterio", "Peso")
+final_soc
+
+```

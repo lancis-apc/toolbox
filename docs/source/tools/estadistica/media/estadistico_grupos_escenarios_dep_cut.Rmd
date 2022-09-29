@@ -1,0 +1,112 @@
+---
+title: "Análisis grupos por actividad"
+date: "18/10/2021"
+output:
+  html_document:
+    df_print: paged
+    mode: selfcontained
+  pdf_document: default
+params:
+  p_grupo: grupo_9
+  p_act1: 1
+  p_act2: 2
+---
+
+```{r include=FALSE}
+library(matrixStats)
+library(pracma)
+library(dplyr)
+library(purrr)
+library(plotly)
+library(ggplot2)
+library(kableExtra)
+library(devtools)
+library(ggpubr)
+library(data.table)
+library(psych)
+library(GGally)
+library(corrplot)
+library(tidyr)
+library(stringr)
+library(rlist)
+```
+
+```{r, include=FALSE}
+bloques <- function(x, a, b){
+  out <- ggpubr::ggarrange(graficar(x[[a]]),graficar2(x[[a]]),graficar(x[[b]]),graficar2(x[[b]]))
+  print(tmp_ks[a])
+  print(tmp_t[a])
+  print(tmp_ks[b])
+  print(tmp_t[b])
+  return(out)
+}
+```
+
+```{r, include=FALSE}
+group_name <- function(group){
+  group <- gsub("_", " ", group)
+  group <- gsub("g", "G", group)
+  return(group)
+}
+```
+
+```{r}
+#Graficar histogramas en pares
+graficar<- function(a){
+  histogramas<- ggplot(data= a,
+       mapping= aes(x= Aptitud,
+                    fill= Actividad, color= Actividad)) +
+  labs(fill= 'Actividad',
+       x='Aptitud',
+       y='Frecuencia') +
+  geom_histogram(bins=30,
+                 position='identity',
+                 alpha=0.3) +
+    theme(#axis.title.y = element_blank(), 
+        #axis.text.y = element_blank(),
+        axis.line.y= element_line(colour= "black"),
+        axis.ticks.y = element_blank(),
+        axis.line.x = element_line(colour = "black"),
+        panel.background = element_blank(), 
+        panel.grid = element_line(color= "grey",linetype = 4))
+  return(histogramas)
+}
+```
+
+```{r}
+#Gráficas de cajas
+graficar2<- function(a){
+  cajas<- ggplot(data= a, mapping= aes(x= Aptitud,
+                    fill= Actividad, color= Actividad)) +
+    geom_boxplot(alpha= 0.3,
+               outlier.colour= "black",
+               outlier.fill= "black",
+               outlier.size= 3) +
+    labs(plot.title=element_text(size=15),
+       x= "Aptitud", 
+       y= "Actividad") +
+    theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.line.y=element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line.x = element_line(colour = "black"),
+        panel.background = element_blank(),
+        panel.grid = element_line(color= "grey",linetype = 4))
+  return(cajas)
+}
+```
+
+```{r}
+tabla4 <- list.load("./salidas/tabla4.RData")
+tmp_ks <- list.load("./salidas/tmp_ks.RData")
+tmp_t <- list.load("./salidas/tmp_t.RData")
+```
+
+
+# `r group_name(params$p_grupo)`: `r names(tabla4[params$p_act1])` y `r names(tabla4[params$p_act1])`
+```{r}
+act1 <- params$p_act1
+act2 <- params$p_act2
+bloques(tabla4, act1, act2) 
+```
+

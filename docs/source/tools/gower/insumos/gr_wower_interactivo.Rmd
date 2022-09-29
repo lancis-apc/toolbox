@@ -1,0 +1,182 @@
+---
+title: "Graficación de residuales y promedios"
+author: "Tatiana Merino"
+date: "09/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(lpSolve)
+library(ggplot2)
+library(ggrepel)
+library(ggthemes)
+library(tidyverse)
+library(ggplot2)
+library(kableExtra)
+library(patchwork)
+```
+
+```{r}
+custom_roll <- function( x , n ){
+  if( n == 0 | n%%length(x)==0) {
+    return(x)
+    }
+   
+  else if (abs(n)>length(x)) {
+  new_n<- (abs(n)%%length(x))*sign(n)
+  return(c( tail(x,new_n) , head(x,-new_n) ))
+  }
+  else {
+  return(c( tail(x,n) , head(x,-n) ))
+  }
+}
+```
+
+
+```{r}
+residuales <- read.csv("./insumos/bd_residuales_poety_UGA_26abr22.csv", header = TRUE, sep = ",", row.names=1, check.names = FALSE)
+promedios <- read.csv("./insumos/bd_promedio_poety_UGA_26abr22.csv", header = TRUE, sep = ",", row.names=1, check.names = FALSE)
+f.obj <- as.vector(t(residuales))
+```
+
+## residuales
+```{r}
+residuales
+```
+## promedios
+```{r}
+promedios
+```
+
+##GRÁFICAS VERTICALES DE RESIDUALES
+```{r, include=FALSE}
+esc <- "e07_b"
+ver <- "v4"
+act_name_ini <- function(act, x){
+case_when(
+  act == paste0("1_acudul_", x) ~ "Acuacultura dulce",
+  act == paste0("2_acusal_", x) ~ "Acuacultura salobre",
+  act == paste0("3_agr_", x) ~ "Agricultura",
+  act == paste0("4_api_", x) ~ "Apicultura",
+  act == paste0("9_mil_", x) ~ "Milpa maya",
+  act == paste0("11_bov_", x) ~ "Pecuario bovino",
+  act == paste0("12_por_", x) ~ "Porcícola-avícola",
+  act == paste0("7_for_", x) ~ "Forestal",
+  act == paste0("10_min_", x) ~ "Minería",
+  act == paste0("6_ene_", x) ~ "Energía renovable",
+  act == paste0("8_ind_", x) ~ "Industrial",
+  act == paste0("13_pes_", x) ~ "Pesca",
+  act == paste0("14_turnat_", x) ~ "Turismo de naturaleza",
+  act == paste0("15_tursol_", x) ~ "Turismo de sol y playa",
+  act == paste0("16_urb_", x) ~ "Urbano",
+  act == paste0("5_con_", x) ~ "Conservación"
+)
+}
+```
+
+```{r include=TRUE}
+#cambio de nombre
+name_tmp <- act_name_ini(names(residuales), esc)
+colnames(residuales) <- c(name_tmp)
+residuales <- residuales[1:158,]
+residuales
+```
+```{r include=TRUE}
+UGA <- rownames(residuales)
+residuales$UGA <- UGA
+
+#remover columna núm pix
+df <- residuales %>%
+  gather(key = "Variable", value = "valor", -UGA)
+```
+
+
+```{r include=TRUE}
+#cambio de nombre
+name_tmp <- act_name_ini(names(promedios), esc)
+colnames(promedios) <- c(name_tmp)
+#QUITAR ACUACULTURAS
+#promedios<- promedios[,3:16]
+promedios
+
+```
+
+```{r include=FALSE}
+UGA <- rownames(promedios)
+promedios$UGA <- UGA
+
+#remover columna núm pix
+df <- promedios %>%
+  gather(key = "Variable", value = "valor", -UGA)
+```
+
+```{r include=FALSE}
+grafica_res <- function(df1,x, y){
+  colores <- c(rep("black",x))
+  Atributo <- df1$Variable
+  Region <- df1$UGA
+  Valor <- df1$valor
+  puntos = c(rainbow(14))
+  graf <- ggplot(data=df1, aes(x=UGA, y=Valor)) +
+  geom_segment(aes(xend=Region),yend=0,colour = colores,linetype="solid") +
+  geom_point(size=2,shape=21,colour = puntos,fill = puntos, stroke = 1.2, alpha = 0.4) +
+  geom_text_repel(aes(label = paste0(Atributo, " (", round(Valor,2), ")")), size=3,
+                  #family="Calibri", 
+                  max.overlaps = Inf,alpha = 0.8, 
+                  show.legend=FALSE,
+                  nudge_x = 0.05, direction = "y", 
+                  hjust = "left", seed = 42 
+                  #color = 1:13
+                  #color = scale_color_gradientn(colours = rainbow(13))
+                  ) +
+                  #colour = palettes[["Tableau 20"]]$value[1:length(residuales)])+
+  geom_hline(aes(yintercept=0), linetype="dotted") +
+  #scale_x_discrete(labels=c("0"))+
+  theme(
+    panel.grid.minor=element_blank(), 
+    panel.grid.major=element_blank(),
+    #axis.title.x=element_blank(),
+    axis.title.y=element_blank(),
+    axis.text.x=element_text(size=11,face="bold", hjust=0.5),
+    axis.line = element_line(colour = "white"),
+    panel.background = element_blank(),
+    axis.text.y=element_blank()
+    #axis.ticks.y = element_blank()
+    )
+
+graf  +
+  theme(strip.text.y=element_text(size=14)) + scale_y_discrete(c(0,0.25, 0.5, 0.75, 1))
+}
+```
+
+
+```{r include= FALSE, message=FALSE, warning=FALSE}
+#UGA
+x <- 61
+
+#corte de una UGA residuales
+res_r_x <- residuales[x,]
+df_r_x <- res_r_x%>%
+  gather(key = "Variable", value = "valor", -UGA)
+
+pr<-grafica_res(df_r_x)
+
+#corte de una UGA promedios
+prom_x <- promedios[x,]
+df_p_x <- prom_x%>%
+  gather(key = "Variable", value = "valor", -UGA)
+
+pp<- grafica_res(df_p_x)
+
+arreglo<- pp+pr
+
+```
+
+```{r message=FALSE, warning=FALSE}
+arreglo
+```
+
