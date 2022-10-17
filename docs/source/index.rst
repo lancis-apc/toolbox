@@ -10,10 +10,16 @@ Welcome to Toolbox's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   owagis
-   ahp
+   impacto
+   ordenamiento
+   multicriterio
    funciones
-   
+   weber
+   sensibilidad
+   modelacion
+   discovery
+   owagis
+
 
 
 .. Indices and tables

@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+
+<html lang="es-mx">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Análisis de sensibilidad &#8212; Toolbox 1.0 documentation</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Modelación de sistemas dinámicos" href="modelacion.html" />
+    <link rel="prev" title="Ley de Weber-Fechner" href="weber.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="es-mx">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="multicriterio.html">Análisis multicriterio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="funciones.html">Funciones de valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weber.html">Ley de Weber-Fechner</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Análisis de sensibilidad</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#analisis-de-sensibilidad-de-grupos">Análisis de sensibilidad de grupos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analisis-de-intervalos-de-juicio">Análisis de intervalos de juicio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analisis-de-sensibilidad-de-filas-row">Análisis de sensibilidad de filas (ROW)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analisis-de-remocion-de-capas">Análisis de remoción de capas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modelacion.html">Modelación de sistemas dinámicos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Evaluación de escenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="owagis.html">OWA</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="weber.html"
+                          title="previous chapter">Ley de Weber-Fechner</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="modelacion.html"
+                          title="next chapter">Modelación de sistemas dinámicos</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/sensibilidad.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/sensibilidad.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analisis-de-sensibilidad-de-grupos">
+   Análisis de sensibilidad de grupos
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analisis-de-intervalos-de-juicio">
+   Análisis de intervalos de juicio
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analisis-de-sensibilidad-de-filas-row">
+   Análisis de sensibilidad de filas (ROW)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analisis-de-remocion-de-capas">
+   Análisis de remoción de capas
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Análisis de sensibilidad</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analisis-de-sensibilidad-de-grupos">
+   Análisis de sensibilidad de grupos
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analisis-de-intervalos-de-juicio">
+   Análisis de intervalos de juicio
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analisis-de-sensibilidad-de-filas-row">
+   Análisis de sensibilidad de filas (ROW)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analisis-de-remocion-de-capas">
+   Análisis de remoción de capas
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="analisis-de-sensibilidad">
+<h1>Análisis de sensibilidad<a class="headerlink" href="#analisis-de-sensibilidad" title="Permalink to this headline">#</a></h1>
+<p>Los análisis de sensibilidad permiten obtener una aproximación cuantitativa de la influencia que tiene un particular elemento (e.g. un criterio) o experto en el resultado general de un problema de decisión.</p>
+<p>Por ejemplo, el análisis de grupos consiste en cotejar el juicio experto y la pertinencia del campo de conocimiento en cada una de las comparaciones pareadas de todos los elementos de un modelo multicriterio jerárquico (AHP).</p>
+<p>Por su cuenta, el análisis de sensibilidad de intervalos de juicio no sólo incorpora rigurosamente la pluralidad de puntos de vista sobre la importancia relativa de los elementos del AHP, sino también sintetiza de manera pragmática la incertidumbre de los factores que determinan un problema de decisión.</p>
+<p>Con estos análisis de sensibilidad es posible resolver aspectos fundamentales en el AHP en cuanto a la credibilidad y la incertidumbre del juicio de expertos.</p>
+<section id="analisis-de-sensibilidad-de-grupos">
+<h2>Análisis de sensibilidad de grupos<a class="headerlink" href="#analisis-de-sensibilidad-de-grupos" title="Permalink to this headline">#</a></h2>
+<p>El análisis de sensibilidad de grupos, también llamdao del efecto individual, permite calcular la influencia de cada experto sobre los resultados agregados del AHP.</p>
+<p>Este análisis informa a los usuarios del AHP sobre los juicios individuales que más influyen en los pesos y alternativas grupales. Dicha información resulta útil en modelos multicriterio cuyo proceso de desarrollo involucra la agregación de resultados de múltiples expertos con preferencias, conocimientos y experiencias diferentes. El cambio parcial sobre los pesos grupales agregados se obtiene a partir del método de diferencias finitas. Esencialmente, este método consiste en modificar con un valor de perturbación de 1% mediante derivadas parciales cada comparación pareada.</p>
+<p>El efecto de la variación de la comparación pareada individual sobre el peso grupal se obtiene con la siguiente ecuación:</p>
+<p>donde a_kl es la comparación pareada de renglón k y columna l, de cada matriz de comparaciones pareadas C^(P_j ), y A_s^(P_j )  es el peso de la alternativa, s,  del experto P_j.</p>
+<p>Descarga [aquí] el análisis de sensibilidad de grupos en Excel o visita el [repositorio] para obtener el código en RStudio.</p>
+<p><strong>Referencias</strong></p>
+<p>Ivanco, M. (2015). Development of analytical sensitivity analysis for AHP applications. [Master of Science thesis, Old Dominion University].</p>
+<p>Ivanco, M., Hou, G. &amp; Michaeli, J. (2017). Sensitivity analysis method to address user disparities in the analytic hierarchy process. Expert Systems with Applications, 90, 111-126.</p>
+<p>Merino-Benítez. T., Grave, I., &amp; Bojórquez-Tapia, L. A. (2020). «AHP-based vulnerability index for small fisheries in Yucatan, Mexico». Proceedings of the International Symposium on the Analytic Hierarchy Process: the 16th ISAHP conference. DOI: http://www.isahp.org/uploads/048_001.pdf</p>
+</section>
+<section id="analisis-de-intervalos-de-juicio">
+<h2>Análisis de intervalos de juicio<a class="headerlink" href="#analisis-de-intervalos-de-juicio" title="Permalink to this headline">#</a></h2>
+<p>El análisis de sensibilidad por intervalos de juicio está basado en la metodología propuesta por Saaty y Vargas (1987). Este análisis permite (1) incorporar la incertidumbre inherente en las comparaciones pareadas, y (2) calcular la probabilidad de reversión de rango de las alternativas en los procesos de decisión.
+Las matrices de comparaciones pareadas se utilizan como insumos para la construcción de matrices con intervalos de juicio I_ij≡ a_ij^L,a_ij^U] , donde I_ij es el intervalo asociado a la incertidumbre de la comparación de la alternativa A_i con A_j de un conjunto finito de n alternativas A_1,A_2,… A_n. La matriz de intervalos de juicio queda compuesta de la siguiente manera:</p>
+</section>
+<section id="analisis-de-sensibilidad-de-filas-row">
+<h2>Análisis de sensibilidad de filas (ROW)<a class="headerlink" href="#analisis-de-sensibilidad-de-filas-row" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="analisis-de-remocion-de-capas">
+<h2>Análisis de remoción de capas<a class="headerlink" href="#analisis-de-remocion-de-capas" title="Permalink to this headline">#</a></h2>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="weber.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Ley de Weber-Fechner</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="modelacion.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Modelación de sistemas dinámicos</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By LANCIS<br/>
+  
+      &copy; Copyright 2022, LANCIS.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

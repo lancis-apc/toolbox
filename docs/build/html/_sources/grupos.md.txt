@@ -1,0 +1,20 @@
+# Análisis de sensibilidad de grupos
+
+El análisis de sensibilidad por efecto individual permite calcular la influencia de cada experto sobre los resultados agregados del AHP. 
+
+Este análisis informa a los usuarios del AHP sobre los juicios individuales que más influyen en los pesos y alternativas grupales. Dicha información resulta útil en modelos multicriterio cuyo proceso de desarrollo involucra la agregación de resultados de múltiples expertos con preferencias, conocimientos y experiencias diferentes. El cambio parcial sobre los pesos grupales agregados se obtiene a partir del método de diferencias finitas. Esencialmente, este método consiste en modificar con un valor de perturbación de 1% mediante derivadas parciales cada comparación pareada. 
+
+El efecto de la variación de la comparación pareada individual sobre el peso grupal se obtiene con la siguiente ecuación:
+
+
+donde a_kl es la comparación pareada de renglón k y columna l, de cada matriz de comparaciones pareadas C^(P_j ), y A_s^(P_j )  es el peso de la alternativa, s,  del experto P_j.
+
+Descarga [aquí] el análisis de sensibilidad de grupos en Excel o visita el [repositorio] para obtener el código en RStudio.
+
+**Referencias**
+
+Ivanco, M. (2015). Development of analytical sensitivity analysis for AHP applications. [Master of Science thesis, Old Dominion University].
+
+Ivanco, M., Hou, G. & Michaeli, J. (2017). Sensitivity analysis method to address user disparities in the analytic hierarchy process. Expert Systems with Applications, 90, 111-126.
+
+Merino-Benítez. T., Grave, I., & Bojórquez-Tapia, L. A. (2020). "AHP-based vulnerability index for small fisheries in Yucatan, Mexico". Proceedings of the International Symposium on the Analytic Hierarchy Process: the 16th ISAHP conference. DOI: http://www.isahp.org/uploads/048_001.pdf

@@ -1,0 +1,36 @@
+# Análisis multicriterio
+
+## Proceso Analítico Jerárquico (AHP)
+
+El Proceso Analítico Jerárquico (**AHP**, por sus siglas en inglés) es la representación de un problema de decisión en una estructura jerárquica. Esta técnica está fundamentada en la facilidad del cerebro humano para hacer comparaciones pareadas, es decir, que el usuario debe priorizar elementos de decisión de dos en dos. Este procedimiento simplifica la tarea de priorizar ordenadamente cada elemento entre múltiples opciones.
+
+La estructura general de un modelo AHP consiste en tres niveles organizados: la meta como primer nivel, los criterios como segundo y las alternativas de decisión como tercero. El usuario puede desagregar los criterios (es decir, desarrollar subcriterios) tanto como crea conveniente, lo cual resulta en más de tres niveles de desagregación.
+
+Descarga [aquí](https://github.com/lancis-apc/toolbox/raw/main/docs/source/tools/multicriterio/ahp/media/manual_ahp.pdf
+) el manual teórico-práctico de AHP, en él encontrarás un ejemplo desarrollado en Excel, el cual puesdes descargar [aquí](https://github.com/lancis-apc/toolbox/raw/main/docs/source/tools/multicriterio/ahp/media/ejercicio_ahp.xls). Cada hoja del archivo Excel corresponde a un AHP de un número creciente de criterios de decisión.
+
+Si quieres usar un software específico para modelación multicriterio AHP visita la [página](https://www.superdecisions.com/downloads/).
+
+**Referencias**
+
+Video(Youtube) [Talking with Tom: Choosing a school](https://www.youtube.com/watch?v=ChkBNabdfjo&t=378s)
+
+Video(Youtube) [Talking with Tom: Thomas Saaty on the origins of AHP](https://www.youtube.com/watch?v=AtutEppDCN) 
+
+Eakin, H. y L. A. Bojórquez-Tapia. (2008). “Insights into the Composition of Household Vulnerability from Multicriteria Decision Analysis.” Global Environmental Change. https://doi.org/10.1016/j.gloenvocha.2007.09.001
+
+Grave, I., Hernández-Díaz, V., Serrano-Candela, F., Merino, T., Miquelajauregui, Y., & Bojórquez-Tapia, L. A. (2020). Classification Reliability for Gis-Mcda: Ahp and Sensitivity Analysis. 1, 1–5. https://doi.org/10.13033/isahp.y2020.027
+
+Kinoshita, E. (2006). Why we need AHP/ANP instead of utility theory in today’s complex world ? AHP from the perspective of bounded rationality. 36th International Conference on Computers and Industrial Engineering, ICC and IE 2006, 2174–2182.
+
+Merino, T., Grave, I., & Bojórquez-Tapia, L. A. (2020). Ahp- Based Social Vulnerability Index for Small Fisheries in Yucatan, Mexico. 2, 1–5. https://doi.org/10.13033/isahp.y2020.010
+
+Saaty, R. W. (1987). “THE ANALYTIC HIERARCHY PROCESS-WHAT AND HOW IT IS USED” 9 (3): 161–76.
+
+Saaty, T. L. (1996). Decision Making with Dependence and Feedback: The Analytic Network Process. In RWS Publications, 1996, ISBN 0-9620317-9-8. http://www.rwspublications.com/books/anp/decision-making-with-dependence-and-feedback/(Saaty, 1996)
+
+
+## Proceso Analítico Reticuar (ANP)
+
+
+## Pivot

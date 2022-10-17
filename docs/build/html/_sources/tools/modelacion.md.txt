@@ -1,0 +1,14 @@
+# Modelación de sistemas dinámicos
+
+Modelación constitutiva y modelación exploratoria
+
+## Modelos de depósitos y flujos
+
+Vensim
+
+## KSIM
+
+
+## Modelación exploratoria
+
+Con KSIM en Crystal Ball y gráficas en RStudio

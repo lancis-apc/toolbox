@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="es-mx" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Análisis de sensibilidad de grupos &mdash; Toolbox 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="interval.html" />
+    <link rel="prev" title="Análisis de sensibilidad" href="sensibilidad.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Toolbox
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ahp.html">Proceso Analítico Jerárquico (AHP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="funciones.html">Funciones de valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sensibilidad.html">Análisis de sensibilidad</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Análisis de sensibilidad de grupos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="owagis.html">OWA</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Toolbox</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Análisis de sensibilidad de grupos</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/grupos.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="analisis-de-sensibilidad-de-grupos">
+<h1>Análisis de sensibilidad de grupos<a class="headerlink" href="#analisis-de-sensibilidad-de-grupos" title="Permalink to this heading"></a></h1>
+<p>El análisis de sensibilidad por efecto individual permite calcular la influencia de cada experto sobre los resultados agregados del AHP.</p>
+<p>Este análisis informa a los usuarios del AHP sobre los juicios individuales que más influyen en los pesos y alternativas grupales. Dicha información resulta útil en modelos multicriterio cuyo proceso de desarrollo involucra la agregación de resultados de múltiples expertos con preferencias, conocimientos y experiencias diferentes. El cambio parcial sobre los pesos grupales agregados se obtiene a partir del método de diferencias finitas. Esencialmente, este método consiste en modificar con un valor de perturbación de 1% mediante derivadas parciales cada comparación pareada.</p>
+<p>El efecto de la variación de la comparación pareada individual sobre el peso grupal se obtiene con la siguiente ecuación:</p>
+<p>donde a_kl es la comparación pareada de renglón k y columna l, de cada matriz de comparaciones pareadas C^(P_j ), y A_s^(P_j )  es el peso de la alternativa, s,  del experto P_j.</p>
+<p>Descarga [aquí] el análisis de sensibilidad de grupos en Excel o visita el [repositorio] para obtener el código en RStudio.</p>
+<p><strong>Referencias</strong></p>
+<p>Ivanco, M. (2015). Development of analytical sensitivity analysis for AHP applications. [Master of Science thesis, Old Dominion University].</p>
+<p>Ivanco, M., Hou, G. &amp; Michaeli, J. (2017). Sensitivity analysis method to address user disparities in the analytic hierarchy process. Expert Systems with Applications, 90, 111-126.</p>
+<p>Merino-Benítez. T., Grave, I., &amp; Bojórquez-Tapia, L. A. (2020). «AHP-based vulnerability index for small fisheries in Yucatan, Mexico». Proceedings of the International Symposium on the Analytic Hierarchy Process: the 16th ISAHP conference. DOI: http://www.isahp.org/uploads/048_001.pdf</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sensibilidad.html" class="btn btn-neutral float-left" title="Análisis de sensibilidad" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interval.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, LANCIS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

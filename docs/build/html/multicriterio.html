@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+
+<html lang="es-mx">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Análisis multicriterio &#8212; Toolbox 1.0 documentation</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Funciones de valor" href="funciones.html" />
+    <link rel="prev" title="Welcome to Toolbox’s documentation!" href="index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="es-mx">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Análisis multicriterio</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#proceso-analitico-jerarquico-ahp">Proceso Analítico Jerárquico (AHP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#proceso-analitico-reticuar-anp">Proceso Analítico Reticuar (ANP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pivot">Pivot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="funciones.html">Funciones de valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weber.html">Ley de Weber-Fechner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sensibilidad.html">Análisis de sensibilidad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelacion.html">Modelación de sistemas dinámicos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Evaluación de escenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="owagis.html">OWA</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Welcome to Toolbox’s documentation!</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="funciones.html"
+                          title="next chapter">Funciones de valor</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/multicriterio.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/multicriterio.md.txt"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#proceso-analitico-jerarquico-ahp">
+   Proceso Analítico Jerárquico (AHP)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#proceso-analitico-reticuar-anp">
+   Proceso Analítico Reticuar (ANP)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pivot">
+   Pivot
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Análisis multicriterio</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#proceso-analitico-jerarquico-ahp">
+   Proceso Analítico Jerárquico (AHP)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#proceso-analitico-reticuar-anp">
+   Proceso Analítico Reticuar (ANP)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pivot">
+   Pivot
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="analisis-multicriterio">
+<h1>Análisis multicriterio<a class="headerlink" href="#analisis-multicriterio" title="Permalink to this headline">#</a></h1>
+<section id="proceso-analitico-jerarquico-ahp">
+<h2>Proceso Analítico Jerárquico (AHP)<a class="headerlink" href="#proceso-analitico-jerarquico-ahp" title="Permalink to this headline">#</a></h2>
+<p>El Proceso Analítico Jerárquico (<strong>AHP</strong>, por sus siglas en inglés) es la representación de un problema de decisión en una estructura jerárquica. Esta técnica está fundamentada en la facilidad del cerebro humano para hacer comparaciones pareadas, es decir, que el usuario debe priorizar elementos de decisión de dos en dos. Este procedimiento simplifica la tarea de priorizar ordenadamente cada elemento entre múltiples opciones.</p>
+<p>La estructura general de un modelo AHP consiste en tres niveles organizados: la meta como primer nivel, los criterios como segundo y las alternativas de decisión como tercero. El usuario puede desagregar los criterios (es decir, desarrollar subcriterios) tanto como crea conveniente, lo cual resulta en más de tres niveles de desagregación.</p>
+<p>Descarga <a class="reference external" href="https://github.com/lancis-apc/toolbox/raw/main/docs/source/tools/multicriterio/ahp/media/manual_ahp.pdf">aquí</a> el manual teórico-práctico de AHP, en él encontrarás un ejemplo desarrollado en Excel, el cual puesdes descargar <a class="reference external" href="https://github.com/lancis-apc/toolbox/raw/main/docs/source/tools/multicriterio/ahp/media/ejercicio_ahp.xls">aquí</a>. Cada hoja del archivo Excel corresponde a un AHP de un número creciente de criterios de decisión.</p>
+<p>Si quieres usar un software específico para modelación multicriterio AHP visita la <a class="reference external" href="https://www.superdecisions.com/downloads/">página</a>.</p>
+<p><strong>Referencias</strong></p>
+<p>Video(Youtube) <a class="reference external" href="https://www.youtube.com/watch?v=ChkBNabdfjo&amp;t=378s">Talking with Tom: Choosing a school</a></p>
+<p>Video(Youtube) <a class="reference external" href="https://www.youtube.com/watch?v=AtutEppDCN">Talking with Tom: Thomas Saaty on the origins of AHP</a></p>
+<p>Eakin, H. y L. A. Bojórquez-Tapia. (2008). “Insights into the Composition of Household Vulnerability from Multicriteria Decision Analysis.” Global Environmental Change. https://doi.org/10.1016/j.gloenvocha.2007.09.001</p>
+<p>Grave, I., Hernández-Díaz, V., Serrano-Candela, F., Merino, T., Miquelajauregui, Y., &amp; Bojórquez-Tapia, L. A. (2020). Classification Reliability for Gis-Mcda: Ahp and Sensitivity Analysis. 1, 1–5. https://doi.org/10.13033/isahp.y2020.027</p>
+<p>Kinoshita, E. (2006). Why we need AHP/ANP instead of utility theory in today’s complex world ? AHP from the perspective of bounded rationality. 36th International Conference on Computers and Industrial Engineering, ICC and IE 2006, 2174–2182.</p>
+<p>Merino, T., Grave, I., &amp; Bojórquez-Tapia, L. A. (2020). Ahp- Based Social Vulnerability Index for Small Fisheries in Yucatan, Mexico. 2, 1–5. https://doi.org/10.13033/isahp.y2020.010</p>
+<p>Saaty, R. W. (1987). “THE ANALYTIC HIERARCHY PROCESS-WHAT AND HOW IT IS USED” 9 (3): 161–76.</p>
+<p>Saaty, T. L. (1996). Decision Making with Dependence and Feedback: The Analytic Network Process. In RWS Publications, 1996, ISBN 0-9620317-9-8. http://www.rwspublications.com/books/anp/decision-making-with-dependence-and-feedback/(Saaty, 1996)</p>
+</section>
+<section id="proceso-analitico-reticuar-anp">
+<h2>Proceso Analítico Reticuar (ANP)<a class="headerlink" href="#proceso-analitico-reticuar-anp" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="pivot">
+<h2>Pivot<a class="headerlink" href="#pivot" title="Permalink to this headline">#</a></h2>
+</section>
+</section>
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Welcome to Toolbox’s documentation!</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="funciones.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Funciones de valor</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By LANCIS<br/>
+  
+      &copy; Copyright 2022, LANCIS.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
